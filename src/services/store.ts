@@ -16,7 +16,7 @@ export const rootReducers = combineReducers({
   constructorBurger: constructorReducer,
   feed: feedReducer,
   order: orderReducer,
-  user: userReducer,
+  user: userReducer
 });
 
 const store = configureStore({

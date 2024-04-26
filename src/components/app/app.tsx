@@ -19,7 +19,6 @@ import { useDispatch } from '../../services/store';
 import { getUser } from '../../services/slices/userSlice';
 import { fetchIngredients } from '../../services/slices/ingredientSlice';
 
-
 const App = () => {
   const location = useLocation();
   const backgroundLocation = location.state?.background;
@@ -27,14 +26,14 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getUser())
-    dispatch(fetchIngredients())
+    dispatch(getUser());
+    dispatch(fetchIngredients());
   }, [dispatch]);
 
   return (
     <div className={styles.app}>
       <AppHeader />
-     <Routes>
+      <Routes location={backgroundLocation || location}>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
         <Route
@@ -85,6 +84,9 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+        <Route path='/feed/:number' element={<OrderInfo />} />
+        <Route path='/ingredients/:id' element={<IngredientDetails />} />
+        <Route path='/profile/orders/:number' element={<OrderInfo />} />
         <Route path='*' element={<NotFound404 />} />
       </Routes>
       {backgroundLocation && (

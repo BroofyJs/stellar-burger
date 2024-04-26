@@ -71,10 +71,11 @@ type TOrdersResponse = TServerResponse<{
   data: TOrder[];
 }>;
 
-export const getIngredientsApi = () => fetch(`${URL}/ingredients`)
+export const getIngredientsApi = () =>
+  fetch(`${URL}/ingredients`)
     .then((res) => checkResponse<TIngredientsResponse>(res))
     .then((data) => {
-      console.log(data.data)
+      console.log(data.data);
       if (data?.success) return data.data;
       return Promise.reject(data);
     });

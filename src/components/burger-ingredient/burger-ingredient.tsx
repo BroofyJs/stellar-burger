@@ -12,7 +12,7 @@ export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
     const location = useLocation();
 
     const handleAdd = () => {
-      dispatch(addIngredients(ingredient))
+      dispatch(addIngredients(ingredient));
     };
 
     return (
@@ -25,5 +25,3 @@ export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
     );
   }
 );
-
-

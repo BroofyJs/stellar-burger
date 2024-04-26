@@ -9,12 +9,12 @@ export const Register: FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const errorText = useSelector(getError)
+  const errorText = useSelector(getError);
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    
-    dispatch(registerUser({email, password, name: userName}));
+
+    dispatch(registerUser({ email, password, name: userName }));
   };
 
   return (

@@ -64,7 +64,10 @@ const constructorSlice = createSlice({
         currentIngredient
       );
     },
-    removeIngredient: ( state, { payload }: PayloadAction<TConstructorIngredient> ) => {
+    removeIngredient: (
+      state,
+      { payload }: PayloadAction<TConstructorIngredient>
+    ) => {
       state.constructorItems.ingredients =
         state.constructorItems.ingredients.filter(
           (ingredient) => ingredient.id != payload.id
@@ -82,11 +85,8 @@ const constructorSlice = createSlice({
   }
 });
 
-export const { 
-  getIsLoading,
-  getConstructorItems,
-  getError,
- } = constructorSlice.selectors;
+export const { getIsLoading, getConstructorItems, getError } =
+  constructorSlice.selectors;
 export const {
   addIngredients,
   ingredientsToUp,
