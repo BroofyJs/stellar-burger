@@ -27,7 +27,7 @@ export const ProtectedRoute = ({
 
   if (user && onlyUnAuth) {
     const { from } = location.state || { from: { pathname: '/' } };
-    return <Navigate  to={from} />;
+    return <Navigate to={from} />;
   }
 
   return children;

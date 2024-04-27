@@ -156,6 +156,11 @@ export const userSlice = createSlice({
   }
 });
 
-export const { getIsAuthChecked, getUserData, getError, getIsLoading, getOrders } =
-  userSlice.selectors;
+export const {
+  getIsAuthChecked,
+  getUserData,
+  getError,
+  getIsLoading,
+  getOrders
+} = userSlice.selectors;
 export default userSlice.reducer;
