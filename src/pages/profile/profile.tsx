@@ -30,10 +30,10 @@ export const Profile: FC = () => {
     formValue.email !== user?.email ||
     !!formValue.password;
 
-  const handleSubmit = async (e: SyntheticEvent) => {
+  const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
 
-    await dispatch(updateUser(formValue));
+    dispatch(updateUser(formValue));
 
     if (!!formValue.password) {
       dispatch(logoutUser());
