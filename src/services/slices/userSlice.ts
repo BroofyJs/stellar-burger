@@ -8,22 +8,32 @@ import {
   updateUserApi,
   registerUserApi
 } from '../../utils/burger-api';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { deleteCookie, setCookie } from '../../utils/cookie';
+import {
+  createAsyncThunk,
+  createSlice,
+  PayloadAction,
+  SerializedError,
+  ThunkDispatch,
+  UnknownAction
+} from '@reduxjs/toolkit';
+import { deleteCookie, setCookie, getCookie } from '../../utils/cookie';
 import { TOrder, TUser } from '@utils-types';
+import { useDispatch } from 'react-redux';
 
 type TUserState = {
   isLoading: boolean;
   error: string | undefined;
   userData: TUser | null;
   userOrders: TOrder[];
+  isAuthChecked: boolean;
 };
 
 export const initialState: TUserState = {
   isLoading: false,
   error: undefined,
   userData: null,
-  userOrders: []
+  userOrders: [],
+  isAuthChecked: false
 };
 
 export const registerUser = createAsyncThunk(
@@ -57,7 +67,17 @@ export const logoutUser = createAsyncThunk('user/logout', async () => {
   deleteCookie('accessToken');
 });
 
-export const getUser = createAsyncThunk('user/getUser', getUserApi);
+export const getUser = createAsyncThunk('user/getUser', async (_, thunkApi) => {
+  const { dispatch } = thunkApi;
+  let data = null;
+  if (getCookie('accessToken')) {
+    data = await getUserApi();
+  }
+
+  dispatch(userSlice.actions.setAuthChecked(true));
+
+  return data;
+});
 
 export const fetchUserOrders = createAsyncThunk('user/orders', getOrdersApi);
 
@@ -69,12 +89,16 @@ export const updateUser = createAsyncThunk(
 export const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    setAuthChecked: (state, action: PayloadAction<boolean>) => {
+      state.isAuthChecked = action.payload;
+    }
+  },
   selectors: {
     getError: (state) => state.error,
     getUserData: (state) => state.userData,
     getIsLoading: (state) => state.isLoading,
-    getIsAuthChecked: (state) => !state.isLoading,
+    getIsAuthChecked: (state) => state.isAuthChecked,
     getOrders: (state) => state.userOrders
   },
   extraReducers: (builder) => {
@@ -113,7 +137,8 @@ export const userSlice = createSlice({
       })
       .addCase(getUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.userData = action.payload.user;
+        // state.userData = action.payload?.user ?? null;
+        state.userData = null;
       })
       .addCase(updateUser.pending, (state) => {
         state.isLoading = true;
@@ -156,6 +181,7 @@ export const userSlice = createSlice({
   }
 });
 
+export const { setAuthChecked } = userSlice.actions;
 export const {
   getIsAuthChecked,
   getUserData,
