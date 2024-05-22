@@ -134,11 +134,11 @@ export const userSlice = createSlice({
       })
       .addCase(getUser.rejected, (state, action) => {
         state.isLoading = false;
+        state.error = action.error.message as string;
       })
       .addCase(getUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        // state.userData = action.payload?.user ?? null;
-        state.userData = null;
+        state.userData = action.payload?.user ?? null;
       })
       .addCase(updateUser.pending, (state) => {
         state.isLoading = true;
@@ -159,6 +159,7 @@ export const userSlice = createSlice({
       })
       .addCase(logoutUser.rejected, (state, action) => {
         state.isLoading = false;
+        state.error = action.error.message as string;
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.isLoading = false;
