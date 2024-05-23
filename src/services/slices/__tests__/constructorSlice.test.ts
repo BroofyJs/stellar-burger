@@ -3,7 +3,7 @@ import reducer, {
   ingredientsToUp,
   ingredientsToDown,
   removeIngredient,
-  IBurgerConstructorSliceState
+  initialState
 } from '../constructorSlice';
 import { TIngredient } from '../../../utils/types';
 
@@ -35,14 +35,6 @@ const main: TIngredient = {
   image_large: 'main_large.png'
 };
 
-const initialState: IBurgerConstructorSliceState = {
-  constructorItems: {
-    bun: null,
-    ingredients: []
-  },
-  isLoading: false,
-  error: null
-};
 
 describe('constructorSlice', () => {
   it('Добавление ингредиента', () => {

@@ -1,7 +1,15 @@
 const url = 'http://localhost:4000';
 
+const elementUpSelector = '[data-cy="constructor-element-up"]';
+const elementDownSelector = '[data-cy="constructor-element-down"]';
+const modalSelector = '[data-cy="modal"]';
+const modalCloseSelector = '[data-cy="modal-close-btn"]';
+
 describe('E2E Test', () => {
+
   beforeEach(() => {
+    cy.visit(url);
+
     cy.intercept('GET', 'api/ingredients', { fixture: 'ingredients.json' }).as(
       'fetchIngredients'
     );
@@ -9,6 +17,9 @@ describe('E2E Test', () => {
     cy.intercept('GET', 'api/auth/user', { fixture: 'user.json' }).as(
       'getUser'
     );
+
+    cy.get('[data-cy="643d69a5c3f7b9001cfa093c"]').as('bun');
+    cy.get('[data-cy="643d69a5c3f7b9001cfa0941"]').as('main');
   });
 
   it('Проверка доступа localhost:4000', () => {
@@ -18,22 +29,20 @@ describe('E2E Test', () => {
   });
 
   describe('Добавление ингредиентов', () => {
-    beforeEach(() => {
-      cy.visit(url);
-    });
     it('Добавление булки', () => {
-      cy.get('[data-cy="643d69a5c3f7b9001cfa093c"]')
+      cy.get('@bun')
         .contains('Добавить')
         .click();
-      cy.get('[data-cy="constructor-element-up"]').contains(
+        
+      cy.get(elementUpSelector).contains(
         'Краторная булка N-200i'
       );
-      cy.get('[data-cy="constructor-element-down"]').contains(
+      cy.get(elementDownSelector).contains(
         'Краторная булка N-200i'
       );
     });
     it('Добавление начинки', () => {
-      cy.get('[data-cy="643d69a5c3f7b9001cfa0941"]')
+      cy.get('@main')
         .contains('Добавить')
         .click();
       cy.get(
@@ -46,18 +55,18 @@ describe('E2E Test', () => {
       cy.visit(url);
     });
     it('Открытие модали ингредиента', () => {
-      cy.get('[data-cy="643d69a5c3f7b9001cfa0941"]').find('a').click();
-      cy.get('[data-cy="modal"]').should('exist');
+      cy.get('@main').find('a').click();
+      cy.get(modalSelector).should('exist');
     });
     it('Закрытие модали ингредиента по крестику', () => {
-      cy.get('[data-cy="643d69a5c3f7b9001cfa0941"]').find('a').click();
-      cy.get('[data-cy="modal-close-btn"]').should('exist').click();
-      cy.get('[data-cy="modal"]').should('not.exist');
+      cy.get('@main').find('a').click();
+      cy.get(modalCloseSelector).should('exist').click();
+      cy.get(modalSelector).should('not.exist');
     });
     it('Закрытие модали ингредиента по оверлею', () => {
-      cy.get('[data-cy="643d69a5c3f7b9001cfa0941"]').find('a').click();
+      cy.get('@main').find('a').click();
       cy.get('body').click(25, 25);
-      cy.get('[data-cy="modal"]').should('not.exist');
+      cy.get(modalSelector).should('not.exist');
     });
   });
   describe('Создание заказа', () => {
@@ -78,10 +87,10 @@ describe('E2E Test', () => {
     });
 
     it('Проверка создания', () => {
-      cy.get('[data-cy="643d69a5c3f7b9001cfa093c"]')
+      cy.get('@bun')
         .contains('Добавить')
         .click();
-      cy.get('[data-cy="643d69a5c3f7b9001cfa0941"]')
+      cy.get('@main')
         .contains('Добавить')
         .click();
       cy.get('[data-cy="643d69a5c3f7b9001cfa093e"]')
@@ -90,12 +99,12 @@ describe('E2E Test', () => {
 
       cy.get('[data-cy="create-order-btn"]').should('exist').click();
 
-      cy.get('[data-cy="modal"]').contains('40506');
-      cy.get('[data-cy="modal-close-btn"]').click();
-      cy.get('[data-cy="modal"]').should('not.exist');
+      cy.get(modalSelector).contains('40506');
+      cy.get(modalCloseSelector).click();
+      cy.get(modalSelector).should('not.exist');
 
-      cy.get('[data-cy="constructor-element-up"]').should('not.exist');
-      cy.get('[data-cy="constructor-element-down"]').should('not.exist');
+      cy.get(elementUpSelector).should('not.exist');
+      cy.get(elementDownSelector).should('not.exist');
       cy.get('[data-cy="constructor-element-main-container"]')
         .find('li')
         .should('not.exist');
